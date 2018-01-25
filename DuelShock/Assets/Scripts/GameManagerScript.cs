@@ -16,6 +16,7 @@ public class GameManagerScript : MonoBehaviour {
     public int numberOfCols;
 
     public GameObject cloudPrefab;
+    public TurnObjectParentScript playerCamera;
 
     GameObject[,] firstBoard;
     GameObject[,] secondBoard;
@@ -28,16 +29,36 @@ public class GameManagerScript : MonoBehaviour {
 
     int playersTurn = 0;
 
+    Vector2 playerOneCameraPosition;
+    Vector2 playerTwoCameraPosition;
+
     // Use this for initialization
     void Start()
     {
         manager = this;
-        firstBoard = new GameObject[numberOfRows, numberOfCols];
-        secondBoard = new GameObject[numberOfRows, numberOfCols];
-       
+        firstBoard = new GameObject[numberOfCols, numberOfRows];
+        secondBoard = new GameObject[numberOfCols, numberOfRows];
+
+        //Sets the camera pos to the center of player one's board
+        playerOneCameraPosition = new Vector2(boardOneXPos + ((numberOfRows - 1.0f) / 2.0f), boardOneYPos - ((numberOfCols - 1.0f) / 2.0f));
+
+        //Sets the camera pos to the center of player two's board
+        playerTwoCameraPosition = new Vector2(boardTwoXPos + ((numberOfRows - 1.0f) / 2.0f), boardTwoYPos - ((numberOfCols - 1.0f) / 2.0f));
+
+        addToUpdateList(playerCamera);
+        playerCamera.GetComponent<CameraMovement>().init();
         buildBoard();
-       
     }
+
+    public Vector2 getPlayerOneCameraPosition()
+    {
+        return playerOneCameraPosition;
+    }
+    public Vector2 getPlayerTwoCameraPosition()
+    {
+        return playerTwoCameraPosition;
+    }
+
     public void addToUpdateList(TurnObjectParentScript objectToAdd)
     {
         updateTurnList.Add(objectToAdd);

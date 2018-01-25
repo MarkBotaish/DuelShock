@@ -11,6 +11,7 @@ public class CloudScript : TurnObjectParentScript
     int turnDestroy = 0;
 	void Start () {
         manager = GameManagerScript.manager;
+       
 	}
 	
 	// Update is called once per frame
