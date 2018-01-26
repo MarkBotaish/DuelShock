@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class GameManagerScript : MonoBehaviour {
@@ -12,11 +13,20 @@ public class GameManagerScript : MonoBehaviour {
     public float boardTwoXPos;
     public float boardTwoYPos;
 
-    public int numberOfRows;
-    public int numberOfCols;
+    public int numOfCols;
+    public int numOfRows;
+
+    public float timeToMove;
+    public float timeForLight;
 
     public GameObject cloudPrefab;
     public TurnObjectParentScript playerCamera;
+    public GameObject playerOne;
+    public GameObject playerTwo;
+    public GameObject wall;
+    public Button start;
+
+    public Text turnText;
 
     GameObject[,] firstBoard;
     GameObject[,] secondBoard;
@@ -36,18 +46,27 @@ public class GameManagerScript : MonoBehaviour {
     void Start()
     {
         manager = this;
-        firstBoard = new GameObject[numberOfCols, numberOfRows];
-        secondBoard = new GameObject[numberOfCols, numberOfRows];
+        firstBoard = new GameObject[numOfRows, numOfCols];
+        secondBoard = new GameObject[numOfRows, numOfCols];
 
         //Sets the camera pos to the center of player one's board
-        playerOneCameraPosition = new Vector2(boardOneXPos + ((numberOfRows - 1.0f) / 2.0f), boardOneYPos - ((numberOfCols - 1.0f) / 2.0f));
+        playerOneCameraPosition = new Vector2(boardOneXPos + ((numOfCols - 1.0f) / 2.0f), boardOneYPos - ((numOfRows - 1.0f) / 2.0f));
 
         //Sets the camera pos to the center of player two's board
-        playerTwoCameraPosition = new Vector2(boardTwoXPos + ((numberOfRows - 1.0f) / 2.0f), boardTwoYPos - ((numberOfCols - 1.0f) / 2.0f));
+        playerTwoCameraPosition = new Vector2(boardTwoXPos + ((numOfCols - 1.0f) / 2.0f), boardTwoYPos - ((numOfRows - 1.0f) / 2.0f));
 
         addToUpdateList(playerCamera);
         playerCamera.GetComponent<CameraMovement>().init();
+
+        turnText.text = "Player " + (playersTurn + 1) + "'s turn!";
+
+        spawnWall();
         buildBoard();
+
+        playerOne.transform.position = playerOneCameraPosition;
+        playerTwo.transform.position = playerTwoCameraPosition;
+
+       
     }
 
     public Vector2 getPlayerOneCameraPosition()
@@ -100,9 +119,9 @@ public class GameManagerScript : MonoBehaviour {
     void buildBoard()
     {
        
-        for (int i = 0; i < numberOfCols; i++)
+        for (int i = 0; i < numOfRows; i++)
         {
-            for (int j = 0; j < numberOfRows; j++)
+            for (int j = 0; j < numOfCols; j++)
             {
                 //Builds player 1's map and adds it to a 2D array 
                 GameObject first = (GameObject)Instantiate(cloudPrefab, new Vector2(boardOneXPos, boardOneYPos), Quaternion.identity).gameObject;
@@ -115,8 +134,8 @@ public class GameManagerScript : MonoBehaviour {
                 boardOneXPos++; 
                 boardTwoXPos++;
             }
-            boardOneXPos -= numberOfRows;
-            boardTwoXPos -= numberOfRows;
+            boardOneXPos -= numOfCols;
+            boardTwoXPos -= numOfCols;
             boardOneYPos--;
             boardTwoYPos--;
         }
@@ -124,7 +143,9 @@ public class GameManagerScript : MonoBehaviour {
     //Keeps the playersTurn between 0 and 1
     public void updateTurn()
     {
+        start.gameObject.SetActive(true);
         playersTurn = ++playersTurn % 2;
+        turnText.text = "Player " + (playersTurn + 1) + "'s turn!";
         foreach(TurnObjectParentScript update in updateTurnList)
         {
             update.updateTurn();
@@ -134,6 +155,59 @@ public class GameManagerScript : MonoBehaviour {
         {
             updateTurnList.Remove(removeObject);
         }
-        
+        playerOne.GetComponent<PlayerMovement>().enabled = !playerOne.GetComponent<PlayerMovement>().enabled;
+        playerTwo.GetComponent<PlayerMovement>().enabled = !playerTwo.GetComponent<PlayerMovement>().enabled;
+
+
+    }
+
+    public void startTimeToMove()
+    {
+        start.gameObject.SetActive(false);
+        if (playersTurn == 0)
+            playerOne.GetComponent<PlayerMovement>().setMove(true);
+        else
+            playerTwo.GetComponent<PlayerMovement>().setMove(true);
+        StartCoroutine(timer());
+    }
+
+    IEnumerator timer()
+    {
+        yield return new WaitForSeconds(timeToMove);
+        if (playersTurn == 0)
+        {
+            playerOne.GetComponent<PlayerMovement>().stopMovement();
+            playerOne.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        }
+           
+        else{
+            playerTwo.GetComponent<PlayerMovement>().stopMovement();
+            playerTwo.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        }
+           
+
+    }
+
+    void spawnWall()
+    {
+        //Player ones walls
+        GameObject sideWalls = Instantiate(wall, new Vector2(playerOneCameraPosition.x, playerOneCameraPosition.y + ((numOfRows - 1.0f) / 2.0f)+1.0f), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(numOfCols, 1.0f, 1.0f);
+        sideWalls = Instantiate(wall, new Vector2(playerOneCameraPosition.x, playerOneCameraPosition.y - ((numOfRows - 1.0f) / 2.0f) - 1.0f), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(numOfCols, 1.0f, 1.0f);
+        sideWalls = Instantiate(wall, new Vector2(playerOneCameraPosition.x - ((numOfCols - 1.0f) / 2.0f) -1.0f, playerOneCameraPosition.y), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
+        sideWalls = Instantiate(wall, new Vector2(playerOneCameraPosition.x + ((numOfCols - 1.0f) / 2.0f) + 1.0f, playerOneCameraPosition.y), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
+
+        //Player two walls
+        sideWalls = Instantiate(wall, new Vector2(playerTwoCameraPosition.x, playerTwoCameraPosition.y + ((numOfRows - 1.0f) / 2.0f) + 1.0f), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(numOfCols, 1.0f, 1.0f);
+        sideWalls = Instantiate(wall, new Vector2(playerTwoCameraPosition.x, playerTwoCameraPosition.y - ((numOfRows - 1.0f) / 2.0f) - 1.0f), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(numOfCols, 1.0f, 1.0f);
+        sideWalls = Instantiate(wall, new Vector2(playerTwoCameraPosition.x - ((numOfCols - 1.0f) / 2.0f) - 1.0f, playerTwoCameraPosition.y), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
+        sideWalls = Instantiate(wall, new Vector2(playerTwoCameraPosition.x + ((numOfCols - 1.0f) / 2.0f) + 1.0f, playerTwoCameraPosition.y), Quaternion.identity).gameObject;
+        sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
     }
 }

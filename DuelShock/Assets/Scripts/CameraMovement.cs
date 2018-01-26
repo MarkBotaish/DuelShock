@@ -1,19 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraMovement : TurnObjectParentScript {
 
     GameManagerScript manager;
     bool isMoving = false;
+    bool hasMoved = false;
     int turn = -1;
 
     public float speed;
+    public Button right;
+    public Button left; 
+
+    //So Unity doesnt have to calculate this varaibles 3+ times in one run of the update function
     Vector3 cameraTemp;
     Vector3 finalPosTemp;
 
 	// Use this for initialization
 	void Start () {
+        //Init the varaibles to zero s
         cameraTemp = Vector3.zero;
         finalPosTemp = Vector3.zero;
     }
@@ -21,7 +28,6 @@ public class CameraMovement : TurnObjectParentScript {
     public void init()
     {
         manager = GameManagerScript.manager;
-        print(manager);
     }
 
     void Update()
@@ -55,8 +61,30 @@ public class CameraMovement : TurnObjectParentScript {
 
     public override void updateTurn()
     {
+       
+        if (!hasMoved)
+        {
+            isMoving = true;
+            left.gameObject.SetActive(!left.gameObject.activeSelf);
+            right.gameObject.SetActive(!right.gameObject.activeSelf);
+        }
+        else
+        {
+            //If the camera has move(an odd number of times) the turn is not correct. This fixes the turn 
+            turn *= -1;
+        }
         turn *= -1;
-        print(turn);
+        hasMoved = false;
+
+    }
+
+    public void moveCamera()
+    {
+  
         isMoving = true;
+        hasMoved = !hasMoved;
+        turn *= -1;
+        left.gameObject.SetActive(!left.gameObject.activeSelf);
+        right.gameObject.SetActive(!right.gameObject.activeSelf);
     }
 }

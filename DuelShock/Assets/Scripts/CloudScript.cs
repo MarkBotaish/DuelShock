@@ -22,10 +22,10 @@ public class CloudScript : TurnObjectParentScript
     public override void updateTurn()
     {
         turnDestroy++;
-        if (turnDestroy >= 2)
+        if (turnDestroy >= 1)
         {
             manager.removeToUpdateList(this);
-            gameObject.SetActive(false);
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
            
     }
@@ -57,5 +57,16 @@ public class CloudScript : TurnObjectParentScript
     {
         if(canHighlight)
             gameObject.GetComponent<SpriteRenderer>().color += new Color(0.0f, 0.25f, 0.25f, 0.0f);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Players")
+            collision.gameObject.GetComponent<PlayerMovement>().touched(gameObject);
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Players")
+            collision.gameObject.GetComponent<PlayerMovement>().released(gameObject);
     }
 }
