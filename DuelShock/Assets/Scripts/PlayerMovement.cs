@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : TurnObjectParentScript {
 
     float xMove, yMove;
     public float speed;
     public int maxShots;
+    public Text Shots;
+    public Text health;
+    public int lives;
 
-    int numberOfShots;
+    int numberOfShots = 0;
     float lowerXBound, upperXBound;
     float lowerYBound, upperYBound;
 
@@ -54,6 +58,12 @@ public class PlayerMovement : MonoBehaviour {
 
         transform.position = min.transform.position;
 
+        if (!min.GetComponent<SpriteRenderer>().enabled)
+        {
+            shoot();
+        }
+            
+
     }
 
     public void touched(GameObject collision)
@@ -64,5 +74,35 @@ public class PlayerMovement : MonoBehaviour {
     public void released(GameObject collision)
     {
         touchedObjects.Remove(collision.gameObject);
+    }
+
+    public override void updateTurn()
+    {
+        numberOfShots++;
+        if (numberOfShots > 3)
+            numberOfShots = 0;
+
+        Shots.text = "Shots: " + numberOfShots + "/" + maxShots;
+    }
+
+    public int getNumberOfShots()
+    {
+        return numberOfShots;
+    }
+
+    public void shoot()
+    {
+        numberOfShots--;
+        Shots.text = "Shots: " + numberOfShots + "/" + maxShots;
+    }
+
+    public void dealDamage()
+    {
+        print("DAMAGE DEALT");
+        lives--;
+        if (lives <= 0)
+            print("YOU DEAD AS HELL");
+
+        health.text = lives.ToString();
     }
 }

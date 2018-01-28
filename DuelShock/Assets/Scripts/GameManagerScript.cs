@@ -17,12 +17,12 @@ public class GameManagerScript : MonoBehaviour {
     public int numOfRows;
 
     public float timeToMove;
-    public float timeForLight;
+    public float speedMultiplier;
 
     public GameObject cloudPrefab;
     public TurnObjectParentScript playerCamera;
-    public GameObject playerOne;
-    public GameObject playerTwo;
+    public TurnObjectParentScript playerOne;
+    public TurnObjectParentScript playerTwo;
     public GameObject wall;
     public Button start;
 
@@ -66,7 +66,12 @@ public class GameManagerScript : MonoBehaviour {
         playerOne.transform.position = playerOneCameraPosition;
         playerTwo.transform.position = playerTwoCameraPosition;
 
-       
+        updateTurnList.Add(playerOne);
+        updateTurnList.Add(playerTwo);
+
+        playerOne.updateTurn();
+
+
     }
 
     public Vector2 getPlayerOneCameraPosition()
@@ -90,7 +95,7 @@ public class GameManagerScript : MonoBehaviour {
     public bool cloudPlayerCheck(GameObject cloud)
     {
         //if player 1
-        if (playersTurn == 0)
+        if (playersTurn % 2 == 0)
         {
             //If the cloud is in the opposite board return true; otherwise, return false;
             foreach (GameObject cloudObject in secondBoard)
@@ -101,7 +106,7 @@ public class GameManagerScript : MonoBehaviour {
             return false;
         }
         //If player 2
-        if (playersTurn == 1)
+        if (playersTurn % 2 == 1)
         {
             //If the cloud is in the opposite board return true; otherwise, return false;
             foreach (GameObject cloudObject in firstBoard)
@@ -144,8 +149,8 @@ public class GameManagerScript : MonoBehaviour {
     public void updateTurn()
     {
         start.gameObject.SetActive(true);
-        playersTurn = ++playersTurn % 2;
-        turnText.text = "Player " + (playersTurn + 1) + "'s turn!";
+        playersTurn++;
+        turnText.text = "Player " + (playersTurn%2 + 1) + "'s turn!";
         foreach(TurnObjectParentScript update in updateTurnList)
         {
             update.updateTurn();
@@ -155,16 +160,35 @@ public class GameManagerScript : MonoBehaviour {
         {
             updateTurnList.Remove(removeObject);
         }
+
         playerOne.GetComponent<PlayerMovement>().enabled = !playerOne.GetComponent<PlayerMovement>().enabled;
         playerTwo.GetComponent<PlayerMovement>().enabled = !playerTwo.GetComponent<PlayerMovement>().enabled;
 
+        checkSpeed();
+    }
 
+    void checkSpeed()
+    {
+        if(playersTurn % 1 == 0)
+        {
+            //Check For better solution 
+            foreach (GameObject clouds in firstBoard)
+                clouds.GetComponent<Animator>().speed *= speedMultiplier;
+            foreach (GameObject clouds in secondBoard)
+                clouds.GetComponent<Animator>().speed *= speedMultiplier;
+        }
     }
 
     public void startTimeToMove()
     {
+        foreach (TurnObjectParentScript removeObject in removeList)
+        {
+            removeObject.deleting();
+        }
+
+        removeList.Clear();
         start.gameObject.SetActive(false);
-        if (playersTurn == 0)
+        if (playersTurn % 2 == 0)
             playerOne.GetComponent<PlayerMovement>().setMove(true);
         else
             playerTwo.GetComponent<PlayerMovement>().setMove(true);
@@ -174,7 +198,7 @@ public class GameManagerScript : MonoBehaviour {
     IEnumerator timer()
     {
         yield return new WaitForSeconds(timeToMove);
-        if (playersTurn == 0)
+        if (playersTurn % 2 == 0)
         {
             playerOne.GetComponent<PlayerMovement>().stopMovement();
             playerOne.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
@@ -209,5 +233,13 @@ public class GameManagerScript : MonoBehaviour {
         sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
         sideWalls = Instantiate(wall, new Vector2(playerTwoCameraPosition.x + ((numOfCols - 1.0f) / 2.0f) + 1.0f, playerTwoCameraPosition.y), Quaternion.identity).gameObject;
         sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
+    }
+
+    public TurnObjectParentScript getCurrentPlayer()
+    {
+        if (playersTurn % 2.0 == 0)
+            return playerOne;
+        
+        return playerTwo;
     }
 }

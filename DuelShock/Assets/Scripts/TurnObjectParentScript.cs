@@ -5,7 +5,12 @@ using UnityEngine;
 public class TurnObjectParentScript : MonoBehaviour {
 
     public virtual void updateTurn() {
-        print("Parent");
+        print("Something Went Wrong");
+    }
+
+    public virtual void deleting()
+    {
+       
     }
 
 };
