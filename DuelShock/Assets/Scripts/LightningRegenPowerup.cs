@@ -21,6 +21,6 @@ public class LightningRegenPowerup : MonoBehaviour {
 				collider.gameObject.GetComponent<PlayerMovement> ().updateTurn ();
 			}
 		}
-		Destroy (GameObject);
+		Destroy (gameObject);
 	}
 }

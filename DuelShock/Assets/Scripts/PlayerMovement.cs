@@ -80,7 +80,7 @@ public class PlayerMovement : TurnObjectParentScript {
     {
         numberOfShots++;
         if (numberOfShots > 3)
-            numberOfShots = 0;
+            numberOfShots = 3;
 
         Shots.text = "Shots: " + numberOfShots + "/" + maxShots;
     }
