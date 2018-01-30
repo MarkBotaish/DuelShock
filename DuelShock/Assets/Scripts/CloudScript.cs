@@ -52,9 +52,10 @@ public class CloudScript : TurnObjectParentScript
         gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
 
-        if(player != null)
+		if(player != null)
         {
             player.GetComponent<PlayerMovement>().dealDamage();
+
         }
     }
 

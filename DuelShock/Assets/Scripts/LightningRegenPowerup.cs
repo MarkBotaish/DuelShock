@@ -18,6 +18,7 @@ public class LightningRegenPowerup : MonoBehaviour {
 	{
 		if (collider.tag == "Players") {
 			if (collider.GetComponent<PlayerMovement> ().getNumberOfShots () < 3) {
+				print ("LIGHTNING RECHARGED");
 				collider.gameObject.GetComponent<PlayerMovement> ().updateTurn ();
 			}
 		}

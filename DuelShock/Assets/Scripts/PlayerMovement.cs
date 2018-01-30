@@ -18,6 +18,8 @@ public class PlayerMovement : TurnObjectParentScript {
 
     bool canMove = false;
 
+	public bool hasBarrier = false;
+
     List<GameObject> touchedObjects = new List<GameObject>();
 
 	// Use this for initialization
@@ -98,10 +100,14 @@ public class PlayerMovement : TurnObjectParentScript {
 
     public void dealDamage()
     {
-        print("DAMAGE DEALT");
-        lives--;
-        if (lives <= 0)
-            print("YOU DEAD AS HELL");
+		if (!hasBarrier) {
+			print ("DAMAGE DEALT");
+			lives--;
+			if (lives <= 0)
+				print ("YOU DEAD AS HELL");
+		} else {
+			print ("DAMAGE ABSORBED");
+		}
 
         health.text = lives.ToString();
     }

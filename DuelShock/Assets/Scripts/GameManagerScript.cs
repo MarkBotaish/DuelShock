@@ -28,8 +28,8 @@ public class GameManagerScript : MonoBehaviour {
 
     public Text turnText;
 
-    GameObject[,] firstBoard;
-    GameObject[,] secondBoard;
+    public GameObject[,] firstBoard;
+    public GameObject[,] secondBoard;
 
     //This is the list of all objects that need to be updated on turns. Powerups and clouds go in this list
     List<TurnObjectParentScript> updateTurnList = new List<TurnObjectParentScript>();
