@@ -18,6 +18,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public float timeToMove;
     public float speedMultiplier;
+    public int numberOfRoundsForMultiplier;
 
     public GameObject cloudPrefab;
     public TurnObjectParentScript playerCamera;
@@ -28,11 +29,15 @@ public class GameManagerScript : MonoBehaviour {
 
     public Text turnText;
 
-    public GameObject[,] firstBoard;
-    public GameObject[,] secondBoard;
+    GameObject[,] firstBoard;
+    GameObject[,] secondBoard;
+
+    List<TurnObjectParentScript> destroyedFirstBoard = new List<TurnObjectParentScript>();
+    List<TurnObjectParentScript> destroyedSecondBoard = new List<TurnObjectParentScript>();
+
 
     //This is the list of all objects that need to be updated on turns. Powerups and clouds go in this list
-    List<TurnObjectParentScript> updateTurnList = new List<TurnObjectParentScript>();
+    public List<TurnObjectParentScript> updateTurnList = new List<TurnObjectParentScript>();
 
     //Cannot edit list while looping through. This is a temp lis to hold the removed objects
     List<TurnObjectParentScript> removeList = new List<TurnObjectParentScript>();
@@ -91,6 +96,10 @@ public class GameManagerScript : MonoBehaviour {
     public void removeToUpdateList(TurnObjectParentScript objectToAdd)
     {
         removeList.Add(objectToAdd);
+        if(objectToAdd.tag == "Cloud")
+        {
+            destroyedFirstBoard.Add(objectToAdd);
+        }
     }
     public bool cloudPlayerCheck(GameObject cloud)
     {
@@ -118,6 +127,13 @@ public class GameManagerScript : MonoBehaviour {
         }
         Debug.Log("Something went wrong...");
         return false;
+    }
+
+    public TurnObjectParentScript getRandomDestroyedObject()
+    {
+        if (playersTurn % 2 == 0)
+            return destroyedFirstBoard[Random.Range(0, destroyedFirstBoard.Count - 1)];
+        return destroyedSecondBoard[Random.Range(0, destroyedSecondBoard.Count - 1)];
     }
 
     //Creates the map
@@ -153,7 +169,20 @@ public class GameManagerScript : MonoBehaviour {
         turnText.text = "Player " + (playersTurn%2 + 1) + "'s turn!";
         foreach(TurnObjectParentScript update in updateTurnList)
         {
-            update.updateTurn();
+            if(update.tag == "Players")
+            {
+                if (playersTurn % 2 == 0 && update == playerOne)
+                    playerOne.updateTurn();
+                else if(playersTurn % 2 == 1 && update == playerTwo)
+                    playerTwo.updateTurn();
+                
+                  
+            }
+            else
+            {
+                update.updateTurn();
+            }
+            
         }
         
         foreach(TurnObjectParentScript removeObject in removeList)
@@ -169,7 +198,7 @@ public class GameManagerScript : MonoBehaviour {
 
     void checkSpeed()
     {
-        if(playersTurn % 1 == 0)
+        if(playersTurn % numberOfRoundsForMultiplier == 0)
         {
             //Check For better solution 
             foreach (GameObject clouds in firstBoard)

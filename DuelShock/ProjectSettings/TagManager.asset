@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Players
+  - Cloud
   layers:
   - Default
   - TransparentFX

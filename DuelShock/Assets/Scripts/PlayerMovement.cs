@@ -107,6 +107,7 @@ public class PlayerMovement : TurnObjectParentScript {
 				print ("YOU DEAD AS HELL");
 		} else {
 			print ("DAMAGE ABSORBED");
+            hasBarrier = false;
 		}
 
         health.text = lives.ToString();
