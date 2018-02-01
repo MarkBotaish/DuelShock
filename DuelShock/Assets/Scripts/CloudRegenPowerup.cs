@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CloudRegenPowerup : MonoBehaviour {
+public class CloudRegenPowerup : PowerUps {
 
 	GameManagerScript manager;
     TurnObjectParentScript regenCloud;

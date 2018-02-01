@@ -15,6 +15,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public int numOfCols;
     public int numOfRows;
+    public int powerUpsSpawnRound;
 
     public float timeToMove;
     public float speedMultiplier;
@@ -35,9 +36,13 @@ public class GameManagerScript : MonoBehaviour {
     List<TurnObjectParentScript> destroyedFirstBoard = new List<TurnObjectParentScript>();
     List<TurnObjectParentScript> destroyedSecondBoard = new List<TurnObjectParentScript>();
 
+    bool hasMoved = false;
+
+
+    public List<GameObject> powerUps;
 
     //This is the list of all objects that need to be updated on turns. Powerups and clouds go in this list
-    public List<TurnObjectParentScript> updateTurnList = new List<TurnObjectParentScript>();
+    List<TurnObjectParentScript> updateTurnList = new List<TurnObjectParentScript>();
 
     //Cannot edit list while looping through. This is a temp lis to hold the removed objects
     List<TurnObjectParentScript> removeList = new List<TurnObjectParentScript>();
@@ -100,6 +105,10 @@ public class GameManagerScript : MonoBehaviour {
         {
             destroyedFirstBoard.Add(objectToAdd);
         }
+    }
+    public void removeFromUpdateList(TurnObjectParentScript objectToRemove)
+    {
+        updateTurnList.Remove(objectToRemove);
     }
     public bool cloudPlayerCheck(GameObject cloud)
     {
@@ -164,36 +173,55 @@ public class GameManagerScript : MonoBehaviour {
     //Keeps the playersTurn between 0 and 1
     public void updateTurn()
     {
-        start.gameObject.SetActive(true);
-        playersTurn++;
-        turnText.text = "Player " + (playersTurn%2 + 1) + "'s turn!";
-        foreach(TurnObjectParentScript update in updateTurnList)
+        if (hasMoved)
         {
-            if(update.tag == "Players")
+            start.gameObject.SetActive(true);
+            playersTurn++;
+            spawnPowerUps();
+
+            turnText.text = "Player " + (playersTurn % 2 + 1) + "'s turn!";
+            foreach (TurnObjectParentScript update in updateTurnList)
             {
-                if (playersTurn % 2 == 0 && update == playerOne)
-                    playerOne.updateTurn();
-                else if(playersTurn % 2 == 1 && update == playerTwo)
-                    playerTwo.updateTurn();
-                
-                  
+                if (update.tag == "Players")
+                {
+                    if (playersTurn % 2 == 0 && update == playerOne)
+                        playerOne.updateTurn();
+                    else if (playersTurn % 2 == 1 && update == playerTwo)
+                        playerTwo.updateTurn();
+
+
+                }
+                else
+                {
+                    update.updateTurn();
+                }
+
             }
-            else
+
+            foreach (TurnObjectParentScript removeObject in removeList)
             {
-                update.updateTurn();
+                updateTurnList.Remove(removeObject);
             }
-            
+
+            playerOne.GetComponent<PlayerMovement>().enabled = !playerOne.GetComponent<PlayerMovement>().enabled;
+            playerTwo.GetComponent<PlayerMovement>().enabled = !playerTwo.GetComponent<PlayerMovement>().enabled;
+
+            checkSpeed();
+            hasMoved = false;
+        }
+        else
+        {
+            print("NEED TO MOVE FIRST");
         }
         
-        foreach(TurnObjectParentScript removeObject in removeList)
-        {
-            updateTurnList.Remove(removeObject);
-        }
+    }
 
-        playerOne.GetComponent<PlayerMovement>().enabled = !playerOne.GetComponent<PlayerMovement>().enabled;
-        playerTwo.GetComponent<PlayerMovement>().enabled = !playerTwo.GetComponent<PlayerMovement>().enabled;
-
-        checkSpeed();
+    void spawnPowerUps()
+    {
+        if (playersTurn % powerUpsSpawnRound == 0)
+            Instantiate(powerUps[Random.Range(0, powerUps.Count)], firstBoard[Random.Range(0, numOfRows), Random.Range(0, numOfCols)].transform.position, Quaternion.identity);
+        if (playersTurn % (powerUpsSpawnRound+1) == 0)
+            Instantiate(powerUps[Random.Range(0, powerUps.Count)], secondBoard[Random.Range(0, numOfRows), Random.Range(0, numOfCols)].transform.position, Quaternion.identity);
     }
 
     void checkSpeed()
@@ -210,6 +238,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public void startTimeToMove()
     {
+        hasMoved = true;
         foreach (TurnObjectParentScript removeObject in removeList)
         {
             removeObject.deleting();

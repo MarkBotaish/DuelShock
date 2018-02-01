@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class CloudScript : TurnObjectParentScript
 {
-
+    public float reducedSpeed;
     GameManagerScript manager;
     bool canHighlight = false;
+    bool hasBeenPicked = false;
 
     GameObject partical;
     GameObject player = null;
@@ -15,10 +16,6 @@ public class CloudScript : TurnObjectParentScript
 	void Start () {
         manager = GameManagerScript.manager;
         partical = transform.GetChild(0).gameObject;
-	}
-	
-	// Update is called once per frame
-	void Update () {
 	}
 
     public override void updateTurn()
@@ -32,7 +29,7 @@ public class CloudScript : TurnObjectParentScript
 
     private void OnMouseDown()
     {
-        if (canHighlight)
+        if (canHighlight && !hasBeenPicked)
         {
             PlayerMovement player = manager.getCurrentPlayer().GetComponent<PlayerMovement>();
             if (player.getNumberOfShots() > 0)
@@ -44,6 +41,7 @@ public class CloudScript : TurnObjectParentScript
             {
                 print("CANT SHOOT");
             }
+            hasBeenPicked = true;
         }
     }
     public void strikeLightning()
@@ -86,6 +84,9 @@ public class CloudScript : TurnObjectParentScript
         {
             collision.gameObject.GetComponent<PlayerMovement>().touched(gameObject);
             player = collision.gameObject;
+
+            if(!gameObject.GetComponent<SpriteRenderer>().enabled)
+                collision.gameObject.GetComponent<PlayerMovement>().setSpeed(reducedSpeed);
         }
     }
             
@@ -94,7 +95,11 @@ public class CloudScript : TurnObjectParentScript
         if (collision.tag == "Players")
         {
             collision.gameObject.GetComponent<PlayerMovement>().released(gameObject);
+           
             player = null;
+
+            if (gameObject.GetComponent<SpriteRenderer>().enabled)
+                collision.gameObject.GetComponent<PlayerMovement>().restSpeed();
         }
     }
 

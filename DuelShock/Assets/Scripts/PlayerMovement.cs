@@ -13,18 +13,22 @@ public class PlayerMovement : TurnObjectParentScript {
     public int lives;
 
     int numberOfShots = 0;
+    float fullSpeed;
     float lowerXBound, upperXBound;
     float lowerYBound, upperYBound;
 
     bool canMove = false;
 
-	public bool hasBarrier = false;
+	bool hasBarrier = false;
 
     List<GameObject> touchedObjects = new List<GameObject>();
 
+    PowerUps power;
+
 	// Use this for initialization
 	void Start () {
-		
+        power = null;
+        fullSpeed = speed;
 	}
 	
 	// Update is called once per frame
@@ -36,8 +40,20 @@ public class PlayerMovement : TurnObjectParentScript {
         {
             gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(xMove * speed, yMove * speed);
         }
+
+        if (Input.GetKeyDown(KeyCode.Space) && power!= null)
+            power.usePowerUp();
        
 	}
+    public void setSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
+
+    public void restSpeed()
+    {
+        speed = fullSpeed;
+    }
 
     public void setMove(bool tof)
     {
@@ -62,7 +78,7 @@ public class PlayerMovement : TurnObjectParentScript {
 
         if (!min.GetComponent<SpriteRenderer>().enabled)
         {
-            shoot();
+            dealDamage();
         }
             
 
@@ -111,5 +127,21 @@ public class PlayerMovement : TurnObjectParentScript {
 		}
 
         health.text = lives.ToString();
+    }
+
+    public PowerUps getPower()
+    {
+        return power;
+    }
+
+    public void setPower(PowerUps powerUp)
+    {
+        power = powerUp;
+    }
+
+    public void turnOnBarrier()
+    {
+        hasBarrier = true;
+        print("BARRIER ON");
     }
 }
