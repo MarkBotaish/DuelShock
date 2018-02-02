@@ -16,7 +16,7 @@ TagManager:
   - 
   - 
   - Clouds
-  - 
+  - BackGround
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 823994907
+    locked: 0
   - name: Clouds
     uniqueID: 320755093
     locked: 0

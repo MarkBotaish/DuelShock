@@ -49,6 +49,7 @@ public class CloudScript : TurnObjectParentScript
         partical.SetActive(true);
         gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        manager.addToDestroyedObject(this);
 
 		if(player != null)
         {
@@ -106,6 +107,14 @@ public class CloudScript : TurnObjectParentScript
     public override void deleting()
     {
         gameObject.GetComponent<Animator>().SetBool("hasStuck", true);
+    }
+
+    public void resetCloud()
+    {
+        partical.SetActive(false);
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
+        hasBeenPicked = false;
     }
 
 }

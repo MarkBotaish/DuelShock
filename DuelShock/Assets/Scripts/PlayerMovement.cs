@@ -96,8 +96,9 @@ public class PlayerMovement : TurnObjectParentScript {
 
     public override void updateTurn()
     {
+        health.text = lives.ToString();
         numberOfShots++;
-        if (numberOfShots > 3)
+        if (numberOfShots > 3 && power == null)
             numberOfShots = 3;
 
         Shots.text = "Shots: " + numberOfShots + "/" + maxShots;

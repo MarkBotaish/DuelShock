@@ -141,8 +141,16 @@ public class GameManagerScript : MonoBehaviour {
     public TurnObjectParentScript getRandomDestroyedObject()
     {
         if (playersTurn % 2 == 0)
-            return destroyedFirstBoard[Random.Range(0, destroyedFirstBoard.Count - 1)];
-        return destroyedSecondBoard[Random.Range(0, destroyedSecondBoard.Count - 1)];
+            return destroyedFirstBoard[Random.Range(0, destroyedFirstBoard.Count)];
+        return destroyedSecondBoard[Random.Range(0, destroyedSecondBoard.Count)];
+    }
+
+    public void addToDestroyedObject(TurnObjectParentScript obj)
+    {
+        if (playersTurn % 2 == 0)
+            destroyedFirstBoard.Add(obj);
+       else
+            destroyedSecondBoard.Add(obj);
     }
 
     //Creates the map
