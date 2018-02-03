@@ -11,6 +11,7 @@ public class CloudScript : TurnObjectParentScript
 
     GameObject partical;
     GameObject player = null;
+
     // Use this for initialization
     int turnDestroy = 0;
 	void Start () {

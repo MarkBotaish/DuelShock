@@ -46,6 +46,9 @@ TagManager:
   - name: Clouds
     uniqueID: 320755093
     locked: 0
+  - name: PowerUps
+    uniqueID: 3870132511
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

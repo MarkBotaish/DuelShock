@@ -37,7 +37,9 @@ public class GameManagerScript : MonoBehaviour {
     List<TurnObjectParentScript> destroyedSecondBoard = new List<TurnObjectParentScript>();
 
     bool hasMoved = false;
+    bool isMoving = false;
 
+    Coroutine cTimer;
 
     public List<GameObject> powerUps;
 
@@ -140,9 +142,28 @@ public class GameManagerScript : MonoBehaviour {
 
     public TurnObjectParentScript getRandomDestroyedObject()
     {
+        TurnObjectParentScript temp;
         if (playersTurn % 2 == 0)
-            return destroyedFirstBoard[Random.Range(0, destroyedFirstBoard.Count)];
-        return destroyedSecondBoard[Random.Range(0, destroyedSecondBoard.Count)];
+            temp = destroyedFirstBoard[Random.Range(0, destroyedFirstBoard.Count)];
+        else
+            temp = destroyedSecondBoard[Random.Range(0, destroyedSecondBoard.Count)];
+
+        removeFromDestroyedClouds(temp);
+        return temp;
+    }
+
+    void removeFromDestroyedClouds(TurnObjectParentScript obj)
+    {
+        if (playersTurn % 2 == 0)
+            destroyedFirstBoard.Remove(obj);
+        else destroyedSecondBoard.Remove(obj);
+    }
+
+    public int getNumberOfCloudsDestroyed()
+    {
+        if (playersTurn % 2 == 0)
+            return destroyedFirstBoard.Count;
+        return destroyedSecondBoard.Count;
     }
 
     public void addToDestroyedObject(TurnObjectParentScript obj)
@@ -178,11 +199,30 @@ public class GameManagerScript : MonoBehaviour {
             boardTwoYPos--;
         }
     }
-    //Keeps the playersTurn between 0 and 1
     public void updateTurn()
     {
         if (hasMoved)
         {
+            //Stops the player if they end their turn before the timer ends
+            if (isMoving)
+            {
+                StopCoroutine(cTimer);
+                if (playersTurn % 2 == 0)
+                {
+                    playerOne.GetComponent<PlayerMovement>().stopMovement();
+                    playerOne.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                }
+                else
+                {
+                    if(playersTurn >= 1)
+                    {
+                        playerTwo.GetComponent<PlayerMovement>().stopMovement();
+                        playerTwo.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    }
+                }
+                isMoving = false;
+            }
+
             start.gameObject.SetActive(true);
             playersTurn++;
             spawnPowerUps();
@@ -258,11 +298,12 @@ public class GameManagerScript : MonoBehaviour {
             playerOne.GetComponent<PlayerMovement>().setMove(true);
         else
             playerTwo.GetComponent<PlayerMovement>().setMove(true);
-        StartCoroutine(timer());
+        cTimer = StartCoroutine(timer());
     }
 
     IEnumerator timer()
     {
+        isMoving = true;
         yield return new WaitForSeconds(timeToMove);
         if (playersTurn % 2 == 0)
         {
@@ -274,7 +315,7 @@ public class GameManagerScript : MonoBehaviour {
             playerTwo.GetComponent<PlayerMovement>().stopMovement();
             playerTwo.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
-           
+        isMoving = false;
 
     }
 

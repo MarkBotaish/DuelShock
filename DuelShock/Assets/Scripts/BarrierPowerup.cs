@@ -6,6 +6,7 @@ public class BarrierPowerup : PowerUps {
 
     PlayerMovement player;
     GameManagerScript manager;
+    public Sprite texture;
 
     public int lifeSpan;
     int turns;
@@ -20,6 +21,7 @@ public class BarrierPowerup : PowerUps {
 		if (collider.tag == "Players") {
 			print ("BARRIER GAINED");
             player = collider.gameObject.GetComponent<PlayerMovement>();
+            manager.removeFromUpdateList(this);
 
             if (player.getPower() == null)
             {
@@ -35,7 +37,6 @@ public class BarrierPowerup : PowerUps {
     {
         player.turnOnBarrier();
         player.setPower(null);
-        manager.removeFromUpdateList(this);
         Destroy(gameObject);
     }
 
@@ -49,5 +50,9 @@ public class BarrierPowerup : PowerUps {
             Destroy(gameObject);
         }
            
+    }
+    public override Sprite getTexture()
+    {
+        return texture;
     }
 }

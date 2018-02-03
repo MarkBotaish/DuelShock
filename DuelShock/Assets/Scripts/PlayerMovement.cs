@@ -10,6 +10,8 @@ public class PlayerMovement : TurnObjectParentScript {
     public int maxShots;
     public Text Shots;
     public Text health;
+    public Text errorBox;
+    public Image powerUpImage;
     public int lives;
 
     int numberOfShots = 0;
@@ -42,7 +44,12 @@ public class PlayerMovement : TurnObjectParentScript {
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && power!= null)
+        {
             power.usePowerUp();
+            if(power == null)
+                powerUpImage.gameObject.SetActive(false);
+        }
+           
        
 	}
     public void setSpeed(float newSpeed)
@@ -98,10 +105,18 @@ public class PlayerMovement : TurnObjectParentScript {
     {
         health.text = lives.ToString();
         numberOfShots++;
-        if (numberOfShots > 3 && power == null)
+        if (numberOfShots > 3)
             numberOfShots = 3;
 
         Shots.text = "Shots: " + numberOfShots + "/" + maxShots;
+
+        if (power != null)
+        {
+            powerUpImage.gameObject.SetActive(true);
+            powerUpImage.sprite = power.getTexture();
+        } else
+            powerUpImage.gameObject.SetActive(false);
+
     }
 
     public int getNumberOfShots()
@@ -138,6 +153,11 @@ public class PlayerMovement : TurnObjectParentScript {
     public void setPower(PowerUps powerUp)
     {
         power = powerUp;
+        if (powerUp != null)
+        {
+            powerUpImage.gameObject.SetActive(true);
+            powerUpImage.sprite = power.getTexture();
+        }
     }
 
     public void turnOnBarrier()

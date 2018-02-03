@@ -5,5 +5,8 @@ using UnityEngine;
 public class PowerUps : TurnObjectParentScript {
 
     public virtual void usePowerUp() { }
+    public virtual Sprite getTexture() {
+        return null;
+    }
     
 }
