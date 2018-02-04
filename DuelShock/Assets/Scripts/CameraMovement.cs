@@ -11,8 +11,6 @@ public class CameraMovement : TurnObjectParentScript {
     int turn = -1;
 
     public float speed;
-    public Button right;
-    public Button left; 
 
     //So Unity doesnt have to calculate this varaibles 3+ times in one run of the update function
     Vector3 cameraTemp;
@@ -65,8 +63,6 @@ public class CameraMovement : TurnObjectParentScript {
         if (!hasMoved)
         {
             isMoving = true;
-            left.gameObject.SetActive(!left.gameObject.activeSelf);
-            right.gameObject.SetActive(!right.gameObject.activeSelf);
         }
         else
         {
@@ -84,7 +80,5 @@ public class CameraMovement : TurnObjectParentScript {
         isMoving = true;
         hasMoved = !hasMoved;
         turn *= -1;
-        left.gameObject.SetActive(!left.gameObject.activeSelf);
-        right.gameObject.SetActive(!right.gameObject.activeSelf);
     }
 }

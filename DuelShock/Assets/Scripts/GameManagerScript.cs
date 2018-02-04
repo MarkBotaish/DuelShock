@@ -8,13 +8,13 @@ public class GameManagerScript : MonoBehaviour {
 
     public static GameManagerScript manager;
 
-    public float boardOneXPos;
-    public float boardOneYPos;
-    public float boardTwoXPos;
-    public float boardTwoYPos;
+    float boardOneXPos = -9.0f;
+    float boardOneYPos = 1.5f;
+    float boardTwoXPos = 4.0f;
+    float boardTwoYPos = 1.5f;
 
-    public int numOfCols;
-    public int numOfRows;
+    int numOfCols = 6;
+    int numOfRows = 4;
     public int powerUpsSpawnRound;
 
     public float timeToMove;
@@ -27,6 +27,8 @@ public class GameManagerScript : MonoBehaviour {
     public TurnObjectParentScript playerTwo;
     public GameObject wall;
     public Button start;
+    public GameObject camera;
+    public GameObject error;
 
     public Text turnText;
 
@@ -255,7 +257,7 @@ public class GameManagerScript : MonoBehaviour {
         }
         else
         {
-            print("NEED TO MOVE FIRST");
+            error.GetComponent<ErrorBoxScript>().diplayError("NEED TO MOVE FIRST");
         }
         
     }
@@ -333,7 +335,8 @@ public class GameManagerScript : MonoBehaviour {
             playerTwo.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
         isMoving = false;
-
+        yield return new WaitForSeconds(0.2f);
+        camera.GetComponent<CameraMovement>().moveCamera();
     }
 
     void spawnWall()

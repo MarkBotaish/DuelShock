@@ -24,8 +24,8 @@ public class LightningRegenPowerup : PowerUps {
 	{
         if (collider.tag == "Players")
         {
-            print("EXTRA LIGHTNING GAINED");
             player = collider.gameObject.GetComponent<PlayerMovement>();
+            player.errorBox.GetComponent<ErrorBoxScript>().diplayError("EXTRA LIGHTNING GAINED");
 
             if (player.getPower() == null)
             {
@@ -34,7 +34,7 @@ public class LightningRegenPowerup : PowerUps {
                 manager.removeToUpdateList(this);
             }
             else
-                print("YOU ALREADY HAVE A POWER UP");
+                player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
 
         }
     }

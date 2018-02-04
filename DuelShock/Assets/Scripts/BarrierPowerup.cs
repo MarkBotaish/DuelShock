@@ -19,8 +19,8 @@ public class BarrierPowerup : PowerUps {
 	void OnTriggerEnter2D(Collider2D collider)
 	{
 		if (collider.tag == "Players") {
-			print ("BARRIER GAINED");
             player = collider.gameObject.GetComponent<PlayerMovement>();
+            player.errorBox.GetComponent<ErrorBoxScript>().diplayError("BARRIER GAINED");
             manager.removeToUpdateList(this);
 
             if (player.getPower() == null)
@@ -29,9 +29,9 @@ public class BarrierPowerup : PowerUps {
                 gameObject.SetActive(false);
             }
             else
-                print("YOU ALREADY HAVE A POWER UP");
-                
-		}
+                player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
+
+        }
 	}
     public override void usePowerUp()
     {

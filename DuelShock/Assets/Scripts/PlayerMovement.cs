@@ -135,12 +135,12 @@ public class PlayerMovement : TurnObjectParentScript {
     public void dealDamage()
     {
 		if (!hasBarrier) {
-			print ("DAMAGE DEALT");
+            errorBox.GetComponent<ErrorBoxScript>().diplayError("DAMAGE DEALT");
 			lives--;
             if (lives <= 0)
                 panel.SetActive(true);
 		} else {
-			print ("DAMAGE ABSORBED");
+            errorBox.GetComponent<ErrorBoxScript>().diplayError("DAMAGE ABSORBED");
             hasBarrier = false;
 		}
 
