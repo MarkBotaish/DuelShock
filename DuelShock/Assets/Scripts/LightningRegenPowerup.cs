@@ -25,17 +25,16 @@ public class LightningRegenPowerup : PowerUps {
         if (collider.tag == "Players")
         {
             player = collider.gameObject.GetComponent<PlayerMovement>();
-            player.errorBox.GetComponent<ErrorBoxScript>().diplayError("EXTRA LIGHTNING GAINED");
-
+        
             if (player.getPower() == null)
             {
+                player.errorBox.GetComponent<ErrorBoxScript>().diplayError("EXTRA LIGHTNING GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
                 manager.removeToUpdateList(this);
             }
             else
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
-
         }
     }
 
@@ -72,8 +71,7 @@ public class LightningRegenPowerup : PowerUps {
     }
     public override void deleting()
     {
-        turns = lifeSpan;
-        updateTurn();
+        Destroy(gameObject);
     }
 
     public override void init(GameObject obj) {

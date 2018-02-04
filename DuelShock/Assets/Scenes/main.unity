@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd09c02980d33fa4bb353cf30c5244bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUpsSpawnRound: 3
+  powerUpsSpawnRound: 1
   timeToMove: 3
   speedMultiplier: 2
   numberOfRoundsForMultiplier: 6
@@ -227,11 +227,10 @@ MonoBehaviour:
   wall: {fileID: 1009610947923270, guid: 6a9154c640667754696f546187548d23, type: 2}
   start: {fileID: 1001825617}
   camera: {fileID: 1998473034}
+  error: {fileID: 952710855}
   turnText: {fileID: 150667872}
   powerUps:
-  - {fileID: 114475896924820698, guid: e79e739a6975ceb47aefc2c9d97faa44, type: 2}
   - {fileID: 114172354777574226, guid: bc75dfc764ceab443ba6dbfa72c39b76, type: 2}
-  - {fileID: 114800984103460616, guid: 62b341c2a67e0a1418700a0cac42f485, type: 2}
 --- !u!4 &260081580
 Transform:
   m_ObjectHideFlags: 0

@@ -202,6 +202,7 @@ public class GameManagerScript : MonoBehaviour {
     }
     public void updateTurn()
     {
+
         if (hasMoved)
         {
             //Stops the player if they end their turn before the timer ends
@@ -229,13 +230,13 @@ public class GameManagerScript : MonoBehaviour {
             spawnPowerUps();
 
             turnText.text = "Player " + (playersTurn % 2 + 1) + "'s turn!";
-
             for (int i = 0; i < updateTurnList.Count; i++)
             {
                 if (updateTurnList[i] == null)
                 {
                     updateTurnList.Remove(updateTurnList[i]);
                     i--;
+                    continue;
                 }
                 if (updateTurnList[i].tag == "Players")
                 {
@@ -259,7 +260,7 @@ public class GameManagerScript : MonoBehaviour {
         {
             error.GetComponent<ErrorBoxScript>().diplayError("NEED TO MOVE FIRST");
         }
-        
+
     }
 
     void spawnPowerUps()
@@ -303,15 +304,13 @@ public class GameManagerScript : MonoBehaviour {
         hasMoved = true;
         for(int i = 0; i < removeList.Count; i++)
         {
-            if (removeList[i] == null)
-            {
-                removeList.Remove(removeList[i]);
-                i--;
-            }
-            else
-                removeList[i].deleting();                
+            if (removeList[i] != null)
+                removeList[i].deleting();
         }
-        removeList.Clear();
+       if(removeList.Count > 0)
+            removeList.Clear();
+
+
         start.gameObject.SetActive(false);
         if (playersTurn % 2 == 0)
             playerOne.GetComponent<PlayerMovement>().setMove(true);
@@ -335,8 +334,10 @@ public class GameManagerScript : MonoBehaviour {
             playerTwo.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
         isMoving = false;
+        
         yield return new WaitForSeconds(0.2f);
         camera.GetComponent<CameraMovement>().moveCamera();
+        
     }
 
     void spawnWall()

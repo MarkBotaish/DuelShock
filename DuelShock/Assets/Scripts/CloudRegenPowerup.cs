@@ -22,13 +22,13 @@ public class CloudRegenPowerup : PowerUps {
         if (collider.tag == "Players")
         {
             player = collider.gameObject.GetComponent<PlayerMovement>();
-            player.errorBox.GetComponent<ErrorBoxScript>().diplayError("CLOUD REGEN GAINED");
-           
-            manager.removeToUpdateList(this);
+
             if (player.getPower() == null)
             {
+                player.errorBox.GetComponent<ErrorBoxScript>().diplayError("CLOUD REGEN GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
+                manager.removeToUpdateList(this);
             }
             else
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
@@ -73,9 +73,6 @@ public class CloudRegenPowerup : PowerUps {
 
     public override void deleting()
     {
-     
-        gameObject.SetActive(false);
-        manager.removeToUpdateList(this);
         Destroy(gameObject);
     }
 }

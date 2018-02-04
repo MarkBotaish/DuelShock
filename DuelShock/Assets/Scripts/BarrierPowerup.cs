@@ -20,13 +20,13 @@ public class BarrierPowerup : PowerUps {
 	{
 		if (collider.tag == "Players") {
             player = collider.gameObject.GetComponent<PlayerMovement>();
-            player.errorBox.GetComponent<ErrorBoxScript>().diplayError("BARRIER GAINED");
-            manager.removeToUpdateList(this);
-
+           
             if (player.getPower() == null)
             {
+                player.errorBox.GetComponent<ErrorBoxScript>().diplayError("BARRIER GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
+                manager.removeToUpdateList(this);
             }
             else
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
@@ -58,8 +58,6 @@ public class BarrierPowerup : PowerUps {
 
     public override void deleting()
     {
-        gameObject.SetActive(false);
-        manager.removeToUpdateList(this);
         Destroy(gameObject);
     }
 }
