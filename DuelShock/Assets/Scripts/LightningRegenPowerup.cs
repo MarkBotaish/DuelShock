@@ -11,6 +11,8 @@ public class LightningRegenPowerup : PowerUps {
     public int lifeSpan;
     int turns;
 
+    GameObject cloud;
+
 
     // Use this for initialization
     void Start () {
@@ -29,7 +31,7 @@ public class LightningRegenPowerup : PowerUps {
             {
                 player.setPower(this);
                 gameObject.SetActive(false);
-                manager.removeFromUpdateList(this);
+                manager.removeToUpdateList(this);
             }
             else
                 print("YOU ALREADY HAVE A POWER UP");
@@ -42,7 +44,8 @@ public class LightningRegenPowerup : PowerUps {
         if(player.getNumberOfShots() < 3)
         {
             player.updateTurn();
-            Destroy(gameObject);
+            turns = lifeSpan;
+            updateTurn();
         }
         else
         {
@@ -54,8 +57,9 @@ public class LightningRegenPowerup : PowerUps {
     public override void updateTurn()
     {
         turns++;
-        if (turns >= lifeSpan && gameObject.activeSelf)
+        if (turns >= lifeSpan)
         {
+            cloud.GetComponent<CloudScript>().setTouched(null);
             manager.removeToUpdateList(this);
             Destroy(gameObject);
         }
@@ -65,5 +69,14 @@ public class LightningRegenPowerup : PowerUps {
     public override Sprite getTexture()
     {
         return texture;
+    }
+    public override void deleting()
+    {
+        turns = lifeSpan;
+        updateTurn();
+    }
+
+    public override void init(GameObject obj) {
+        cloud = obj;
     }
 }

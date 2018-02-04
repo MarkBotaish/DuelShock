@@ -12,6 +12,7 @@ public class PlayerMovement : TurnObjectParentScript {
     public Text health;
     public Text errorBox;
     public Image powerUpImage;
+    public GameObject panel;
     public int lives;
 
     int numberOfShots = 0;
@@ -82,6 +83,7 @@ public class PlayerMovement : TurnObjectParentScript {
         }
 
         transform.position = min.transform.position;
+        min.GetComponent<CloudScript>().setTouched(this);
 
         if (!min.GetComponent<SpriteRenderer>().enabled)
         {
@@ -135,8 +137,8 @@ public class PlayerMovement : TurnObjectParentScript {
 		if (!hasBarrier) {
 			print ("DAMAGE DEALT");
 			lives--;
-			if (lives <= 0)
-				print ("YOU DEAD AS HELL");
+            if (lives <= 0)
+                panel.SetActive(true);
 		} else {
 			print ("DAMAGE ABSORBED");
             hasBarrier = false;

@@ -41,7 +41,7 @@ public class GameManagerScript : MonoBehaviour {
 
     Coroutine cTimer;
 
-    public List<GameObject> powerUps;
+    public List<TurnObjectParentScript> powerUps;
 
     //This is the list of all objects that need to be updated on turns. Powerups and clouds go in this list
     List<TurnObjectParentScript> updateTurnList = new List<TurnObjectParentScript>();
@@ -75,8 +75,11 @@ public class GameManagerScript : MonoBehaviour {
         spawnWall();
         buildBoard();
 
-        playerOne.transform.position = playerOneCameraPosition;
-        playerTwo.transform.position = playerTwoCameraPosition;
+        playerOne.transform.position = firstBoard[(numOfRows / 2), (numOfCols / 2)].transform.position;
+        playerTwo.transform.position = secondBoard[(numOfRows / 2), (numOfCols / 2)].transform.position;
+
+        firstBoard[(numOfRows / 2), (numOfCols / 2)].GetComponent<CloudScript>().setTouched(playerOne);
+        secondBoard[(numOfRows / 2), (numOfCols / 2)].GetComponent<CloudScript>().setTouched(playerTwo);
 
         updateTurnList.Add(playerOne);
         updateTurnList.Add(playerTwo);
@@ -107,10 +110,6 @@ public class GameManagerScript : MonoBehaviour {
         {
             destroyedFirstBoard.Add(objectToAdd);
         }
-    }
-    public void removeFromUpdateList(TurnObjectParentScript objectToRemove)
-    {
-        updateTurnList.Remove(objectToRemove);
     }
     public bool cloudPlayerCheck(GameObject cloud)
     {
@@ -228,29 +227,26 @@ public class GameManagerScript : MonoBehaviour {
             spawnPowerUps();
 
             turnText.text = "Player " + (playersTurn % 2 + 1) + "'s turn!";
-            foreach (TurnObjectParentScript update in updateTurnList)
+
+            for (int i = 0; i < updateTurnList.Count; i++)
             {
-                if (update.tag == "Players")
+                if (updateTurnList[i] == null)
                 {
-                    if (playersTurn % 2 == 0 && update == playerOne)
+                    updateTurnList.Remove(updateTurnList[i]);
+                    i--;
+                }
+                if (updateTurnList[i].tag == "Players")
+                {
+                    if (playersTurn % 2 == 0 && updateTurnList[i] == playerOne)
                         playerOne.updateTurn();
-                    else if (playersTurn % 2 == 1 && update == playerTwo)
+                    else if (playersTurn % 2 == 1 && updateTurnList[i] == playerTwo)
                         playerTwo.updateTurn();
-
-
                 }
                 else
                 {
-                    update.updateTurn();
+                    updateTurnList[i].updateTurn();
                 }
-
             }
-
-            foreach (TurnObjectParentScript removeObject in removeList)
-            {
-                updateTurnList.Remove(removeObject);
-            }
-
             playerOne.GetComponent<PlayerMovement>().enabled = !playerOne.GetComponent<PlayerMovement>().enabled;
             playerTwo.GetComponent<PlayerMovement>().enabled = !playerTwo.GetComponent<PlayerMovement>().enabled;
 
@@ -266,10 +262,26 @@ public class GameManagerScript : MonoBehaviour {
 
     void spawnPowerUps()
     {
+        int row = Random.Range(0, numOfRows);
+        int col = Random.Range(0, numOfRows);
+        int powerUpNumber = Random.Range(0, powerUps.Count);
         if (playersTurn % powerUpsSpawnRound == 0)
-            Instantiate(powerUps[Random.Range(0, powerUps.Count)], firstBoard[Random.Range(0, numOfRows), Random.Range(0, numOfCols)].transform.position, Quaternion.identity);
+        {
+            PowerUps P = (PowerUps)Instantiate(powerUps[powerUpNumber], firstBoard[row, col].transform.position, Quaternion.identity);
+            firstBoard[row, col].GetComponent<CloudScript>().setTouched(P);
+            P.init(firstBoard[row, col]);
+        }
+            
         if (playersTurn % (powerUpsSpawnRound+1) == 0)
-            Instantiate(powerUps[Random.Range(0, powerUps.Count)], secondBoard[Random.Range(0, numOfRows), Random.Range(0, numOfCols)].transform.position, Quaternion.identity);
+        {
+            PowerUps P = (PowerUps)Instantiate(powerUps[powerUpNumber], secondBoard[row, col].transform.position, Quaternion.identity);
+            secondBoard[row, col].GetComponent<CloudScript>().setTouched(P);
+            P.init(secondBoard[row, col]);
+
+        }
+           
+
+
     }
 
     void checkSpeed()
@@ -287,11 +299,16 @@ public class GameManagerScript : MonoBehaviour {
     public void startTimeToMove()
     {
         hasMoved = true;
-        foreach (TurnObjectParentScript removeObject in removeList)
+        for(int i = 0; i < removeList.Count; i++)
         {
-            removeObject.deleting();
+            if (removeList[i] == null)
+            {
+                removeList.Remove(removeList[i]);
+                i--;
+            }
+            else
+                removeList[i].deleting();                
         }
-
         removeList.Clear();
         start.gameObject.SetActive(false);
         if (playersTurn % 2 == 0)

@@ -21,7 +21,7 @@ public class BarrierPowerup : PowerUps {
 		if (collider.tag == "Players") {
 			print ("BARRIER GAINED");
             player = collider.gameObject.GetComponent<PlayerMovement>();
-            manager.removeFromUpdateList(this);
+            manager.removeToUpdateList(this);
 
             if (player.getPower() == null)
             {
@@ -54,5 +54,12 @@ public class BarrierPowerup : PowerUps {
     public override Sprite getTexture()
     {
         return texture;
+    }
+
+    public override void deleting()
+    {
+        gameObject.SetActive(false);
+        manager.removeToUpdateList(this);
+        Destroy(gameObject);
     }
 }

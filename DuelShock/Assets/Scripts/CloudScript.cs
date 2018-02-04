@@ -8,15 +8,18 @@ public class CloudScript : TurnObjectParentScript
     GameManagerScript manager;
     bool canHighlight = false;
     bool hasBeenPicked = false;
+    bool hasNoted = false;
 
     GameObject partical;
     GameObject player = null;
+    TurnObjectParentScript objectOnCloud;
 
     // Use this for initialization
     int turnDestroy = 0;
 	void Start () {
         manager = GameManagerScript.manager;
         partical = transform.GetChild(0).gameObject;
+        //objectOnCloud = null; 
 	}
 
     public override void updateTurn()
@@ -26,6 +29,12 @@ public class CloudScript : TurnObjectParentScript
         {
             manager.removeToUpdateList(this);
         }
+
+        if (hasNoted)
+        {
+            gameObject.GetComponent<SpriteRenderer>().color += new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            hasNoted = false;
+        }
     }
 
     private void OnMouseDown()
@@ -33,6 +42,8 @@ public class CloudScript : TurnObjectParentScript
         if (canHighlight && !hasBeenPicked)
         {
             PlayerMovement player = manager.getCurrentPlayer().GetComponent<PlayerMovement>();
+            gameObject.GetComponent<SpriteRenderer>().color -= new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            hasNoted = true;
             if (player.getNumberOfShots() > 0)
             {
                 manager.addToUpdateList(this);
@@ -47,10 +58,25 @@ public class CloudScript : TurnObjectParentScript
     }
     public void strikeLightning()
     {
-        partical.SetActive(true);
-        gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        manager.addToDestroyedObject(this);
+        if(objectOnCloud == null)
+        {
+            partical.SetActive(true);
+            gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            manager.addToDestroyedObject(this);
+        }
+        else
+        {
+            if (objectOnCloud.tag == "Player")
+                player.GetComponent<PlayerMovement>().dealDamage();
+            else
+            {
+                objectOnCloud.deleting();
+                resetCloud();
+            }
+
+        }
+       
 
 		if(player != null)
         {
@@ -82,6 +108,10 @@ public class CloudScript : TurnObjectParentScript
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.tag != "Cloud")
+        {
+            objectOnCloud = collision.gameObject.GetComponent<TurnObjectParentScript>();
+        }
         if (collision.tag == "Players")
         {
             collision.gameObject.GetComponent<PlayerMovement>().touched(gameObject);
@@ -94,6 +124,11 @@ public class CloudScript : TurnObjectParentScript
             
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (collision.tag != "Cloud")
+        {
+            objectOnCloud = null;
+        }
+
         if (collision.tag == "Players")
         {
             collision.gameObject.GetComponent<PlayerMovement>().released(gameObject);
@@ -116,6 +151,11 @@ public class CloudScript : TurnObjectParentScript
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
         hasBeenPicked = false;
+    }
+
+    public void setTouched(TurnObjectParentScript obj)
+    {
+        objectOnCloud = obj;
     }
 
 }
