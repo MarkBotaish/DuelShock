@@ -42,10 +42,10 @@ public class CloudScript : TurnObjectParentScript
         if (canHighlight && !hasBeenPicked)
         {
             PlayerMovement player = manager.getCurrentPlayer().GetComponent<PlayerMovement>();
-            gameObject.GetComponent<SpriteRenderer>().color -= new Color(1.0f, 1.0f, 1.0f, 0.0f);
             hasNoted = true;
             if (player.getNumberOfShots() > 0)
             {
+                gameObject.GetComponent<SpriteRenderer>().color -= new Color(1.0f, 1.0f, 1.0f, 0.0f);
                 manager.addToUpdateList(this);
                 player.shoot();
             }
