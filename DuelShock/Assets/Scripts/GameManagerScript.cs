@@ -113,6 +113,11 @@ public class GameManagerScript : MonoBehaviour {
             destroyedFirstBoard.Add(objectToAdd);
         }
     }
+
+    public void removeFast(TurnObjectParentScript objectToAdd)
+    {
+        updateTurnList.Remove(objectToAdd);
+    }
     public bool cloudPlayerCheck(GameObject cloud)
     {
         //if player 1
@@ -173,6 +178,14 @@ public class GameManagerScript : MonoBehaviour {
             destroyedFirstBoard.Add(obj);
        else
             destroyedSecondBoard.Add(obj);
+    }
+
+    public void removeToDestroyedObject(TurnObjectParentScript obj)
+    {
+        if (playersTurn % 2 == 0)
+            destroyedFirstBoard.Remove(obj);
+        else
+            destroyedSecondBoard.Remove(obj);
     }
 
     //Creates the map
@@ -270,6 +283,12 @@ public class GameManagerScript : MonoBehaviour {
         int powerUpNumber = Random.Range(0, powerUps.Count);
         if (playersTurn % powerUpsSpawnRound == 0)
         {
+            while (firstBoard[row, col].GetComponent<CloudScript>().getTouched() != null)
+            {
+                row = Random.Range(0, numOfRows);
+                col = Random.Range(0, numOfRows);
+            }
+
             PowerUps P = (PowerUps)Instantiate(powerUps[powerUpNumber], firstBoard[row, col].transform.position, Quaternion.identity);
             firstBoard[row, col].GetComponent<CloudScript>().setTouched(P);
             P.init(firstBoard[row, col]);
@@ -277,6 +296,13 @@ public class GameManagerScript : MonoBehaviour {
             
         if (playersTurn % (powerUpsSpawnRound+1) == 0)
         {
+
+            while (secondBoard[row, col].GetComponent<CloudScript>().getTouched() != null)
+            {
+                row = Random.Range(0, numOfRows);
+                col = Random.Range(0, numOfRows);
+            }
+
             PowerUps P = (PowerUps)Instantiate(powerUps[powerUpNumber], secondBoard[row, col].transform.position, Quaternion.identity);
             secondBoard[row, col].GetComponent<CloudScript>().setTouched(P);
             P.init(secondBoard[row, col]);
@@ -361,6 +387,11 @@ public class GameManagerScript : MonoBehaviour {
         sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
         sideWalls = Instantiate(wall, new Vector2(playerTwoCameraPosition.x + ((numOfCols - 1.0f) / 2.0f) + 1.0f, playerTwoCameraPosition.y), Quaternion.identity).gameObject;
         sideWalls.transform.localScale = new Vector3(1.0f, numOfRows, 1.0f);
+    }
+
+    public void displayError(string msg)
+    {
+        error.GetComponent<ErrorBoxScript>().diplayError(msg);
     }
 
     public TurnObjectParentScript getCurrentPlayer()

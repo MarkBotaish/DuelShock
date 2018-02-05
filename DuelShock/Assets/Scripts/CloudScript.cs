@@ -51,7 +51,7 @@ public class CloudScript : TurnObjectParentScript
             }
             else
             {
-                print("CANT SHOOT");
+                manager.displayError("Can't Shoot");
             }
             hasBeenPicked = true;
         }
@@ -72,9 +72,9 @@ public class CloudScript : TurnObjectParentScript
             else
             {
                 objectOnCloud.deleting();
-                resetCloud();
+               
             }
-
+            resetCloud();
         }
        
 
@@ -108,7 +108,7 @@ public class CloudScript : TurnObjectParentScript
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag != "Cloud")
+        if (collision.tag != "Cloud" && objectOnCloud == null)
         {
             objectOnCloud = collision.gameObject.GetComponent<TurnObjectParentScript>();
         }
@@ -124,7 +124,7 @@ public class CloudScript : TurnObjectParentScript
             
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag != "Cloud")
+        if (collision.tag != "Cloud" && objectOnCloud.tag != "Power")
         {
             objectOnCloud = null;
         }
@@ -151,11 +151,19 @@ public class CloudScript : TurnObjectParentScript
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
         hasBeenPicked = false;
+        manager.removeFast(this);
+        manager.removeToDestroyedObject(this);
+        turnDestroy = 0;
     }
 
     public void setTouched(TurnObjectParentScript obj)
     {
         objectOnCloud = obj;
+    }
+
+    public TurnObjectParentScript getTouched()
+    {
+        return objectOnCloud;
     }
 
 }

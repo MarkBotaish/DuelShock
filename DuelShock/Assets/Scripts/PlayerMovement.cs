@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerMovement : TurnObjectParentScript {
 
+    public int playerNumber;
     float xMove, yMove;
     public float speed;
     public int maxShots;
@@ -12,6 +13,7 @@ public class PlayerMovement : TurnObjectParentScript {
     public Text health;
     public Text errorBox;
     public Image powerUpImage;
+    public Image x;
     public GameObject panel;
     public int lives;
 
@@ -110,7 +112,7 @@ public class PlayerMovement : TurnObjectParentScript {
         if (numberOfShots > 3)
             numberOfShots = 3;
 
-        Shots.text = "Shots: " + numberOfShots + "/" + maxShots;
+        Shots.text = numberOfShots + "/" + maxShots;
 
         if (power != null)
         {
@@ -129,7 +131,7 @@ public class PlayerMovement : TurnObjectParentScript {
     public void shoot()
     {
         numberOfShots--;
-        Shots.text = "Shots: " + numberOfShots + "/" + maxShots;
+        Shots.text = numberOfShots + "/" + maxShots;
     }
 
     public void dealDamage()
@@ -138,7 +140,15 @@ public class PlayerMovement : TurnObjectParentScript {
             errorBox.GetComponent<ErrorBoxScript>().diplayError("DAMAGE DEALT");
 			lives--;
             if (lives <= 0)
+            {
+                if (playerNumber == 0)
+                    x.transform.position -= new Vector3(103f, 0f, 0f);
+                else
+                    x.transform.position += new Vector3(103f, 0f, 0f);
                 panel.SetActive(true);
+                
+            }
+                
 		} else {
             errorBox.GetComponent<ErrorBoxScript>().diplayError("DAMAGE ABSORBED");
             hasBarrier = false;

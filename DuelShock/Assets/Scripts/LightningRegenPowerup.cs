@@ -25,9 +25,11 @@ public class LightningRegenPowerup : PowerUps {
         if (collider.tag == "Players")
         {
             player = collider.gameObject.GetComponent<PlayerMovement>();
+
         
             if (player.getPower() == null)
             {
+                cloud.GetComponent<CloudScript>().setTouched(player);
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("EXTRA LIGHTNING GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);

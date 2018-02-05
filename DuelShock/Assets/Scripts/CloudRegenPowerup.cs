@@ -5,8 +5,8 @@ using UnityEngine;
 public class CloudRegenPowerup : PowerUps {
 
 	GameManagerScript manager;
-    TurnObjectParentScript regenCloud;
     PlayerMovement player;
+    GameObject cloud;
     public Sprite texture;
     public int lifeSpan;
     int turns;
@@ -25,6 +25,7 @@ public class CloudRegenPowerup : PowerUps {
 
             if (player.getPower() == null)
             {
+                cloud.GetComponent<CloudScript>().setTouched(player);
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("CLOUD REGEN GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
@@ -41,6 +42,7 @@ public class CloudRegenPowerup : PowerUps {
         int numberOfClouds = manager.getNumberOfCloudsDestroyed();
         if (numberOfClouds > 0)
         {
+            cloud.GetComponent<CloudScript>().setTouched(player);
             print(numberOfClouds);
             if(numberOfClouds >= 2)
                 manager.getRandomDestroyedObject().GetComponent<CloudScript>().resetCloud();
@@ -75,4 +77,11 @@ public class CloudRegenPowerup : PowerUps {
     {
         Destroy(gameObject);
     }
+
+    public override void init(GameObject obj)
+    {
+        cloud = obj;
+    }
 }
+
+

@@ -6,6 +6,7 @@ public class BarrierPowerup : PowerUps {
 
     PlayerMovement player;
     GameManagerScript manager;
+    GameObject cloud;
     public Sprite texture;
 
     public int lifeSpan;
@@ -20,9 +21,10 @@ public class BarrierPowerup : PowerUps {
 	{
 		if (collider.tag == "Players") {
             player = collider.gameObject.GetComponent<PlayerMovement>();
-           
+            
             if (player.getPower() == null)
             {
+                cloud.GetComponent<CloudScript>().setTouched(player);
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("BARRIER GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
@@ -35,6 +37,7 @@ public class BarrierPowerup : PowerUps {
 	}
     public override void usePowerUp()
     {
+      
         player.turnOnBarrier();
         player.setPower(null);
         Destroy(gameObject);
@@ -59,5 +62,9 @@ public class BarrierPowerup : PowerUps {
     public override void deleting()
     {
         Destroy(gameObject);
+    }
+    public override void init(GameObject obj)
+    {
+        cloud = obj;
     }
 }
