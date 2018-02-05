@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd09c02980d33fa4bb353cf30c5244bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUpsSpawnRound: 1
+  powerUpsSpawnRound: 3
   timeToMove: 3
   speedMultiplier: 2
   numberOfRoundsForMultiplier: 6
@@ -403,7 +403,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8ddafa6fe3efacd44a9cc5f761364f1e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 1
   Mute: 0

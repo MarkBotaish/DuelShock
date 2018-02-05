@@ -24,12 +24,13 @@ public class CloudScript : TurnObjectParentScript
 
     public override void updateTurn()
     {
+        
         turnDestroy++;
         if (turnDestroy >= 1)
         {
             manager.removeToUpdateList(this);
         }
-
+        
         if (hasNoted)
         {
             gameObject.GetComponent<SpriteRenderer>().color += new Color(1.0f, 1.0f, 1.0f, 0.0f);
@@ -64,6 +65,7 @@ public class CloudScript : TurnObjectParentScript
             gameObject.GetComponent<Animator>().SetBool("hasStuck", false);
             gameObject.GetComponent<SpriteRenderer>().enabled = false;
             manager.addToDestroyedObject(this);
+            manager.removeFast(this);
         }
         else
         {

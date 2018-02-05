@@ -108,10 +108,6 @@ public class GameManagerScript : MonoBehaviour {
     public void removeToUpdateList(TurnObjectParentScript objectToAdd)
     {
         removeList.Add(objectToAdd);
-        if(objectToAdd.tag == "Cloud")
-        {
-            destroyedFirstBoard.Add(objectToAdd);
-        }
     }
 
     public void removeFast(TurnObjectParentScript objectToAdd)
@@ -160,7 +156,7 @@ public class GameManagerScript : MonoBehaviour {
 
     void removeFromDestroyedClouds(TurnObjectParentScript obj)
     {
-        if (playersTurn % 2 == 0)
+        if (destroyedFirstBoard.Contains(obj))
             destroyedFirstBoard.Remove(obj);
         else destroyedSecondBoard.Remove(obj);
     }
@@ -363,7 +359,8 @@ public class GameManagerScript : MonoBehaviour {
         
         yield return new WaitForSeconds(0.2f);
         camera.GetComponent<CameraMovement>().moveCamera();
-        
+        error.GetComponent<ErrorBoxScript>().diplayError("Select a tile to attack!");
+
     }
 
     void spawnWall()

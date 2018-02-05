@@ -43,11 +43,10 @@ public class CloudRegenPowerup : PowerUps {
         if (numberOfClouds > 0)
         {
             cloud.GetComponent<CloudScript>().setTouched(player);
-            print(numberOfClouds);
             if(numberOfClouds >= 2)
                 manager.getRandomDestroyedObject().GetComponent<CloudScript>().resetCloud();
 
-            manager.getRandomDestroyedObject().GetComponent<CloudScript>().resetCloud();
+            manager.getRandomDestroyedObject().GetComponent<CloudScript>().resetCloud();   
             Destroy(gameObject);
         }
         else
