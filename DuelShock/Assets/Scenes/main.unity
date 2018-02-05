@@ -354,7 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerUpsSpawnRound: 3
   timeToMove: 3
-  speedMultiplier: 2
+  speedMultiplier: 1.5
   numberOfRoundsForMultiplier: 6
   cloudPrefab: {fileID: 1607502538191664, guid: 7edc8232e9109514b938edf2050692b5,
     type: 2}
@@ -368,6 +368,8 @@ MonoBehaviour:
   turnText: {fileID: 150667872}
   powerUps:
   - {fileID: 114172354777574226, guid: bc75dfc764ceab443ba6dbfa72c39b76, type: 2}
+  - {fileID: 114800984103460616, guid: 62b341c2a67e0a1418700a0cac42f485, type: 2}
+  - {fileID: 114475896924820698, guid: e79e739a6975ceb47aefc2c9d97faa44, type: 2}
 --- !u!4 &260081580
 Transform:
   m_ObjectHideFlags: 0

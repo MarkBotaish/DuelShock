@@ -175,6 +175,6 @@ public class PlayerMovement : TurnObjectParentScript {
     public void turnOnBarrier()
     {
         hasBarrier = true;
-        print("BARRIER ON");
+        errorBox.GetComponent<ErrorBoxScript>().diplayError("BARRIER ON");
     }
 }
