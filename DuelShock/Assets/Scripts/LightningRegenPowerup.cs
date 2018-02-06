@@ -71,9 +71,11 @@ public class LightningRegenPowerup : PowerUps {
     {
         return texture;
     }
+
     public override void deleting()
     {
-        Destroy(gameObject);
+        if (gameObject.activeSelf)
+            Destroy(gameObject);
     }
 
     public override void init(GameObject obj) {

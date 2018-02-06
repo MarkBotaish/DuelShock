@@ -126,7 +126,7 @@ public class CloudScript : TurnObjectParentScript
             
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag != "Cloud" && objectOnCloud.tag != "Power")
+        if (collision.tag != "Cloud" && objectOnCloud != null && objectOnCloud.tag != "Power")
         {
             objectOnCloud = null;
         }

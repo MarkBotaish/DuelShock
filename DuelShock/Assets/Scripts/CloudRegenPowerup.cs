@@ -74,7 +74,8 @@ public class CloudRegenPowerup : PowerUps {
 
     public override void deleting()
     {
-        Destroy(gameObject);
+        if (gameObject.activeSelf)
+            Destroy(gameObject);
     }
 
     public override void init(GameObject obj)

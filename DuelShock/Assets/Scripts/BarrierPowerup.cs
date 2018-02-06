@@ -28,7 +28,7 @@ public class BarrierPowerup : PowerUps {
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("BARRIER GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
-                manager.removeToUpdateList(this);
+                manager.removeFast(this);
             }
             else
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
@@ -61,8 +61,10 @@ public class BarrierPowerup : PowerUps {
 
     public override void deleting()
     {
-        Destroy(gameObject);
+        if (gameObject.activeSelf)
+            Destroy(gameObject);
     }
+
     public override void init(GameObject obj)
     {
         cloud = obj;
