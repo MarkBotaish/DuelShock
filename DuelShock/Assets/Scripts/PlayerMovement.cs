@@ -14,6 +14,8 @@ public class PlayerMovement : TurnObjectParentScript {
     public Text errorBox;
     public Image powerUpImage;
     public Image x;
+    public Image P1Image;
+    public Image P2Image;
     public GameObject panel;
     public int lives;
 
@@ -142,9 +144,9 @@ public class PlayerMovement : TurnObjectParentScript {
             if (lives <= 0)
             {
                 if (playerNumber == 0)
-                    x.transform.position -= new Vector3(103f, 0f, 0f);
+                    x.transform.position = P1Image.transform.position;
                 else
-                    x.transform.position += new Vector3(103f, 0f, 0f);
+                    x.transform.position = P2Image.transform.position;
                 panel.SetActive(true);
                 
             }

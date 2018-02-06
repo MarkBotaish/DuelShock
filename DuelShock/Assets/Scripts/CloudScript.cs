@@ -155,6 +155,7 @@ public class CloudScript : TurnObjectParentScript
         hasBeenPicked = false;
         manager.removeFast(this);
         manager.removeToDestroyedObject(this);
+        hasBeenPicked = false;
         turnDestroy = 0;
     }
 

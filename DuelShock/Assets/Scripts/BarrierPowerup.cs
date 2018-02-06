@@ -62,7 +62,11 @@ public class BarrierPowerup : PowerUps {
     public override void deleting()
     {
         if (gameObject.activeSelf)
+        {
+            //cloud.GetComponent<CloudScript>().setTouched(null);
             Destroy(gameObject);
+        }
+           
     }
 
     public override void init(GameObject obj)

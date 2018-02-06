@@ -29,7 +29,7 @@ public class CloudRegenPowerup : PowerUps {
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("CLOUD REGEN GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
-                manager.removeToUpdateList(this);
+                manager.removeFast(this);
             }
             else
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");

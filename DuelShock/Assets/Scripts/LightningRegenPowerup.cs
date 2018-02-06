@@ -11,6 +11,7 @@ public class LightningRegenPowerup : PowerUps {
     public int lifeSpan;
     int turns;
 
+
     GameObject cloud;
 
 
@@ -33,7 +34,7 @@ public class LightningRegenPowerup : PowerUps {
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("EXTRA LIGHTNING GAINED");
                 player.setPower(this);
                 gameObject.SetActive(false);
-                manager.removeToUpdateList(this);
+                manager.removeFast(this);
             }
             else
                 player.errorBox.GetComponent<ErrorBoxScript>().diplayError("YOU ALREADY HAVE A POWER UP");
